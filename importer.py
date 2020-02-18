@@ -30,42 +30,43 @@ def import_list(data):
     item_list = [x[0] for x in filter_none]
     value_list = [x[1] for x in filter_none]
     logging.debug(f"import_list: {item_list}")
-    return item_list + value_list
+    return item_list, value_list
 
 
 # Import query set
 def import_query(get_list):
-    mean = len(get_list) // 2
     table_name = os.getenv("mysql_table")
+    key_list = get_list[0]
+    value_list = get_list[1]
+    lists_length = len(key_list)
     counter = 0
-    query_item = ""
+    query_key = ""
     query_value = ""
-    while mean > counter:
-        mean_counter = counter + mean
-        if isinstance(get_list[mean_counter], int):
-            if counter + 1 == mean:
-                query_item += f"{get_list[counter]}"
-                query_value += f"{get_list[mean_counter]}"
+    while counter < lists_length:
+        if isinstance(value_list[counter], int):
+            if counter + 1 == lists_length:
+                query_key += f"{key_list[counter]}"
+                query_value += f"{value_list[counter]}"
             else:
-                query_item += f"{get_list[counter]}, "
-                query_value += f"{get_list[mean_counter]}, "
+                query_key += f"{key_list[counter]}, "
+                query_value += f"{value_list[counter]}, "
         else:
-            if counter + 1 == mean:
-                query_item += f"{get_list[counter]}"
-                query_value += f"'{get_list[mean_counter]}'"
+            if counter + 1 == lists_length:
+                query_key += f"{key_list[counter]}"
+                query_value += f"'{value_list[counter]}'"
             else:
-                query_item += f"{get_list[counter]}, "
-                query_value += f"'{get_list[mean_counter]}',"
+                query_key += f"{key_list[counter]}, "
+                query_value += f"'{value_list[counter]}',"
         counter += 1
-    imp_query = f"INSERT INTO {table_name}({query_item}) VALUES({query_value})"
+    imp_query = f"INSERT INTO {table_name}({query_key}) VALUES({query_value})"
     return imp_query
 
 
 # Delete query
 def delete_query(get_id):
     table_name = os.getenv("mysql_table")
-    mean = len(get_id) // 2
-    del_query = f"delete from `{table_name}` where `id` = '{get_id[mean]}'"
+    record_id = get_id[1][0]
+    del_query = f"delete from `{table_name}` where `id` = '{record_id}'"
     return del_query
 
 
