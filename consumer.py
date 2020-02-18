@@ -46,12 +46,12 @@ def insert_list(data):
     for value in key_list:
         var = eval("insert_extractor.%s(data)" % value)
         main_list.append(var)
-    zipped = zip(key_list, main_list)
-    filter_none = list(filter(lambda x: x[1] is not None, zipped))
-    unzipped_a = [x[0] for x in filter_none]
-    unzipped_b = [x[1] for x in filter_none]
-    logging.debug(f"insert_list: {unzipped_a} {unzipped_b}")
-    return unzipped_a + unzipped_b
+    aggregation_list = zip(key_list, main_list)
+    filter_none = list(filter(lambda x: x[1] is not None, aggregation_list))
+    item_list = [x[0] for x in filter_none]
+    value_list = [x[1] for x in filter_none]
+    logging.debug(f"insert_list: {item_list} {value_list}")
+    return item_list + value_list
 
 
 # Update query set
@@ -76,8 +76,8 @@ def update_query(get_list):
                 query_data += f"{get_list[counter]} = '{get_list[mean_counter]}', "
         counter += 1
         mean_counter += 1
-    update_query = f"update {table_name} set {query_data} where {id_key} = '{id_value}'"
-    return update_query
+    upd_query = f"update {table_name} set {query_data} where {id_key} = '{id_value}'"
+    return upd_query
 
 
 # Insert query set
@@ -104,16 +104,16 @@ def insert_query(get_list):
                 query_item += f"{get_list[counter]}, "
                 query_value += f"'{get_list[mean_counter]}', "
         counter += 1
-    insert_query = f"insert into {table_name}({query_item}) values({query_value})"
-    return insert_query
+    ins_query = f"insert into {table_name}({query_item}) values({query_value})"
+    return ins_query
 
 
 # Delete query
 def delete_query(get_id):
     table_name = os.getenv("mysql_table")
     mean = len(get_id) // 2
-    delete_query = f"delete from `{table_name}` where `id` = '{get_id[mean]}'"
-    return delete_query
+    del_query = f"delete from `{table_name}` where `id` = '{get_id[mean]}'"
+    return del_query
 
 
 # Execute update query to MySQL
