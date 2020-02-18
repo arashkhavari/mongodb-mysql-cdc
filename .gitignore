@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.txt
+*.log
+*.json
+.env_pro
+import_extractor.py
+update_extractor.py
+insert_extractor.py
+mongoexport.sh

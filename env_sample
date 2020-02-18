@@ -1,0 +1,32 @@
+#Python consumer .env sample file
+
+kafka_host=<kafka_host>:9092
+kafka_topic=<kafka_topic>
+auto_commit=<True_or_False_set_False>
+offset_reset_from=<earliest_or_latest_default_earliest>
+counsumer_group=<consumer_group_name>
+log_file=<log_file>
+log_level=<log_level_default_INFO>
+item_list: <list_of_items_insert_to_db_like_[a,b,c,d]>
+mysql_host=<mysql_host>
+mysql_user=<mysql_user>
+mysql_pass=<mysql_password>
+mysql_db=<mysql_database_name>
+mysql_table=<mysql_table_name>
+mongo_data_path=<mogno_json_export_data_path>
+
+## Sample usage
+# kafka_host=localhost:9092
+# kafka_topic=test.topic
+# auto_commit=False
+# offset_reset_from=earliest
+# counsumer_group=test.topic
+# log_file=consumer.log
+# log_level=INFO
+# item_list= ["id", "status", "name", "family", "number"]
+# mysql_host=localhost
+# mysql_user=username
+# mysql_pass=password
+# mysql_db=test
+# mysql_table=test
+# mongo_data_path=test.json
