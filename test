@@ -1,9 +1,5 @@
 #!/bin/python3
 
-a = [1,'ff',3,'ab']
-b = [5,6,7,'ssa']
+import insert_extractor
 
-zipp = zip(a, b)
-
-zippp = ", ".join("%s = %s" % tup for tup in zipp)
-print(zippp)
+print(getattr(insert_extractor, "id"))

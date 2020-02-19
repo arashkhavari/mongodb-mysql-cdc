@@ -23,7 +23,7 @@ def import_list(data):
     main_list = []
     key_list = json.loads(os.getenv("item_list"))
     for value in key_list:
-        var = eval("import_extractor.%s(data)" % value)
+        var = getattr(import_extractor, value)(data)
         main_list.append(var)
     aggregation_list = zip(key_list, main_list)
     filter_none = list(filter(lambda x: x[1] is not None, aggregation_list))
