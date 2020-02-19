@@ -36,29 +36,10 @@ def import_list(data):
 # Import query set
 def import_query(get_list):
     table_name = os.getenv("mysql_table")
-    key_list = get_list[0]
-    value_list = get_list[1]
-    lists_length = len(key_list)
-    counter = 0
-    query_key = ""
-    query_value = ""
-    while counter < lists_length:
-        if isinstance(value_list[counter], int):
-            if counter + 1 == lists_length:
-                query_key += f"{key_list[counter]}"
-                query_value += f"{value_list[counter]}"
-            else:
-                query_key += f"{key_list[counter]}, "
-                query_value += f"{value_list[counter]}, "
-        else:
-            if counter + 1 == lists_length:
-                query_key += f"{key_list[counter]}"
-                query_value += f"'{value_list[counter]}'"
-            else:
-                query_key += f"{key_list[counter]}, "
-                query_value += f"'{value_list[counter]}',"
-        counter += 1
+    query_key = ','.join(map(str, get_list[0]))
+    query_value = ",".join(list(map(lambda a: str(a) if isinstance(a, bool) else f'"{str(a)}"', get_list[1])))
     imp_query = f"INSERT INTO {table_name}({query_key}) VALUES({query_value})"
+    print(imp_query)
     return imp_query
 
 

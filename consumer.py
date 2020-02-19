@@ -18,11 +18,6 @@ load_dotenv(dotenv_path=env_path)
 logging.basicConfig(filename=os.getenv("log_file"), filemode='w',
                     format='%(asctime)s %(name)s %(levelname)s %(message)s', level=os.getenv("log_level"))
 
-# MySQL Connection
-my_connection = mysql.connector.connect(host=os.getenv("mysql_host"), user=os.getenv("mysql_user"),
-                                        passwd=os.getenv("mysql_pass"),
-                                        database=os.getenv("mysql_db"))
-
 
 # List for items updated
 def update_list(data):
@@ -56,56 +51,25 @@ def insert_list(data):
 
 # Update query set
 def update_query(get_list):
+    table_name = os.getenv("mysql_table")
     key_list = get_list[0]
     value_list = get_list[1]
-    lists_length = len(key_list)
-    id_key = get_list[0][1]
-    id_value = get_list[1][1]
-    table_name = os.getenv("mysql_table")
-    counter = 1
-    query_data = ""
-    while counter < lists_length:
-        if isinstance(value_list[counter], int):
-            if counter == lists_length - 1:
-                query_data += f"{key_list[counter]} = {value_list[counter]}"
-            else:
-                query_data += f"{key_list[counter]} = {value_list[counter]}, "
-        else:
-            if counter == lists_length - 1:
-                query_data += f"{key_list[counter]} = '{value_list[counter]}'"
-            else:
-                query_data += f"{key_list[counter]} = '{value_list[counter]}', "
-        counter += 1
-    upd_query = f"update {table_name} set {query_data} where {id_key} = '{id_value}'"
+    id_key = get_list[0][0]
+    id_value = get_list[1][0]
+    del key_list[0]
+    del value_list[0]
+    aggregation_query_key = zip(key_list, value_list)
+    aggregation_query_key = ", ".join("%s = '%s'" % tup for tup in aggregation_query_key)
+    upd_query = f"update {table_name} set {aggregation_query_key} where {id_key} = '{id_value}'"
     return upd_query
 
 
 # Insert query set
 def insert_query(get_list):
     table_name = os.getenv("mysql_table")
-    key_list = get_list[0]
-    value_list = get_list[1]
-    lists_length = len(key_list)
-    counter = 0
-    query_key = ""
-    query_value = ""
-    while counter < lists_length:
-        if isinstance(value_list[counter], int):
-            if counter + 1 == lists_length:
-                query_key += f"{key_list[counter]}"
-                query_value += f"{value_list[counter]}"
-            else:
-                query_key += f"{key_list[counter]}, "
-                query_value += f"{value_list[counter]}, "
-        else:
-            if counter + 1 == lists_length:
-                query_key += f"{key_list[counter]}"
-                query_value += f"'{value_list[counter]}'"
-            else:
-                query_key += f"{key_list[counter]}, "
-                query_value += f"'{value_list[counter]}',"
-        counter += 1
-    ins_query = f"insert into {table_name}({query_item}) values({query_value})"
+    query_key = ','.join(map(str, get_list[0]))
+    query_value = ",".join(list(map(lambda a: str(a) if isinstance(a, bool) else f'"{str(a)}"', get_list[1])))
+    ins_query = f"insert into {table_name}({query_key}) values({query_value})"
     return ins_query
 
 
@@ -119,7 +83,9 @@ def delete_query(get_id):
 
 # Execute update query to MySQL
 def update_execute(data):
-    return my_connection
+    my_connection = mysql.connector.connect(host=os.getenv("mysql_host"), user=os.getenv("mysql_user"),
+                                            passwd=os.getenv("mysql_pass"),
+                                            database=os.getenv("mysql_db"))
     val = data
     try:
         my_cursor = my_connection.cursor()
@@ -132,7 +98,9 @@ def update_execute(data):
 
 # Execute query to MySQL
 def insert_execute(data, redata):
-    return my_connection
+    my_connection = mysql.connector.connect(host=os.getenv("mysql_host"), user=os.getenv("mysql_user"),
+                                            passwd=os.getenv("mysql_pass"),
+                                            database=os.getenv("mysql_db"))
     insert_record = data
     delete_record = redata
     try:
@@ -169,12 +137,6 @@ while True:
         insert_execute(insert_query(insert_list(json_map)), delete_query(insert_list(json_map)))
         logging.info(f"Offset: {msg.offset} executed")
     elif operation_type == 'update':
-        if len(update_list(json_map)) == 2:
-            logging.info(f"Offset: {msg.offset} update items not in list {json_map}")
-            pass
-        else:
-            update_execute(update_query(update_list(json_map)))
-            logging.info(f"Offset: {msg.offset} executed")
-    else:
-        pass
+        update_execute(update_query(update_list(json_map)))
+        logging.info(f"Offset: {msg.offset} executed")
     consumer.commit()
