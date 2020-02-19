@@ -39,7 +39,6 @@ def import_query(get_list):
     query_key = ','.join(map(str, get_list[0]))
     query_value = ",".join(list(map(lambda a: str(a) if isinstance(a, bool) else f'"{str(a)}"', get_list[1])))
     imp_query = f"INSERT INTO {table_name}({query_key}) VALUES({query_value})"
-    print(imp_query)
     return imp_query
 
 
