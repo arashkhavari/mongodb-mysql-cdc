@@ -10,7 +10,7 @@
  https://debezium.io/documentation/reference/0.10/install.html
 ```
 3.use Source connector or Sink connector (Source Produce to Kafka and Sink Consume from Kafka)
-![pic5](https://github.com/arashkhavari/python-consumer/blob/master/img/img5.png)
+![pic5](https://github.com/arashkhavari/mongodb-mysql-cdc/blob/master/img/img5.png)
  from Control Center or
 ```bash
  > curl -X PUT http://localhost:8083/connectors/source-mongodb-inventory/config -H "Content-Type: application/json" -d '{
@@ -26,7 +26,7 @@
   }'
 ```
 4.Check the topic and producer working
-![pic4](https://github.com/arashkhavari/python-consumer/blob/master/img/img4.png)
+![pic4](https://github.com/arashkhavari/mongodb-mysql-cdc/blob/master/img/img4.png)
  From Control Center
 
 5.Develope Kafka Consumer
@@ -64,7 +64,7 @@
 ```
   If Consumer get the new data this code writes a log file(offset and topic).
   HINT: Producer and Consumer should hava a same traffic.
-![pic3](https://github.com/arashkhavari/python-consumer/blob/master/img/img3.png)
+![pic3](https://github.com/arashkhavari/mongodb-mysql-cdc/blob/master/img/img3.png)
 6.use Supervisord for run python script
   add end of file in /etc/supervisor.conf
 ```bash
@@ -88,7 +88,7 @@
   username=username
   password=password
 ```
-![pic2](https://github.com/arashkhavari/python-consumer/blob/master/img/img2.png)
+![pic2](https://github.com/arashkhavari/mongodb-mysql-cdc/blob/master/img/img2.png)
 
 note:
     replace env_sample to .env_pro
