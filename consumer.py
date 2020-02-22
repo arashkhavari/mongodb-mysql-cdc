@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 from kafka import KafkaConsumer, TopicPartition
 
 # Load Environments from .env_pro
-env_path = Path('.') / '.env_pro'
+# absolute path!!!
+env_path = Path('.') / '/home/consumer/.env_pro'
 load_dotenv(dotenv_path=env_path)
 
 # Insert log to file
@@ -54,10 +55,9 @@ def update_query(get_list):
     table_name = os.getenv("mysql_table")
     key_list = get_list[0]
     value_list = get_list[1]
+    value_list = list(",".join(list(map(lambda a: str(a) if isinstance(a, bool) else f'"{str(a)}"', value_list))).split(","))
     id_key = get_list[0][0]
     id_value = get_list[1][0]
-    del key_list[0]
-    del value_list[0]
     aggregation_query_key = zip(key_list, value_list)
     aggregation_query_key = ", ".join("%s = '%s'" % tup for tup in aggregation_query_key)
     upd_query = f"update {table_name} set {aggregation_query_key} where {id_key} = '{id_value}'"
