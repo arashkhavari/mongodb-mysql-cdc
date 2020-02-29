@@ -84,7 +84,8 @@ def delete_query(get_id):
 def update_execute(data):
     my_connection = mysql.connector.connect(host=os.getenv("mysql_host"), user=os.getenv("mysql_user"),
                                             passwd=os.getenv("mysql_pass"),
-                                            database=os.getenv("mysql_db"))
+                                            database=os.getenv("mysql_db"),
+                                            charset="utf8mb4")
     val = data
     try:
         my_cursor = my_connection.cursor()
@@ -99,7 +100,8 @@ def update_execute(data):
 def insert_execute(data, redata):
     my_connection = mysql.connector.connect(host=os.getenv("mysql_host"), user=os.getenv("mysql_user"),
                                             passwd=os.getenv("mysql_pass"),
-                                            database=os.getenv("mysql_db"))
+                                            database=os.getenv("mysql_db"),
+                                            charset="utf8mb4")
     insert_record = data
     delete_record = redata
     try:
