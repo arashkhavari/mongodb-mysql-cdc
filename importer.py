@@ -56,7 +56,8 @@ with open(os.getenv("mongo_data_path")) as fp:
     cnt = 1
     my_connection = mysql.connector.connect(host=os.getenv("mysql_host"), user=os.getenv("mysql_user"),
                                             passwd=os.getenv("mysql_pass"),
-                                            database=os.getenv("mysql_db"))
+                                            database=os.getenv("mysql_db"),
+                                            charset="utf8mb4")
 
     my_cursor = my_connection.cursor()
     while line:
