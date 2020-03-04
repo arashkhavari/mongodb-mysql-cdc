@@ -54,7 +54,7 @@ def insert_list(data):
 def update_query(get_list):
     table_name = os.getenv("mysql_table")
     key_list = get_list[0]
-    value_list = list(",".join(list(map(lambda a: str(a) if isinstance(a, bool) else f'"{str(a)}"', get_list[1]))).split(","))
+    value_list = list(map(lambda a: str(a) if isinstance(a, bool) else f'"{str(a)}"', get_list[1]))
     id_key = get_list[0][0]
     id_value = get_list[1][0]
     aggregation_query_key = zip(key_list, value_list)
